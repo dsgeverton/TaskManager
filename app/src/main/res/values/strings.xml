@@ -12,4 +12,7 @@
     <string name="permission_rationale">"Contacts permissions are needed for providing email
         completions."
     </string>
+    <string name="nome_da_turma">Nome da Turma</string>
+    <string name="salvar">Salvar</string>
+    <string name="n_mero">Número</string>
 </resources>
