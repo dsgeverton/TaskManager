@@ -1,9 +1,12 @@
 package br.com.everoot.tarefasescolar.Model;
 
+import java.util.List;
+
 public class Turma {
     private String id;
     private String nome;
     private String numero;
+    private List<Tarefa> tarefas;
     private String idAdmin;
 
     public String getId() {
