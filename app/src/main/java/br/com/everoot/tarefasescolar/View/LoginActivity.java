@@ -1,4 +1,4 @@
-package br.com.everoot.tarefasescolar;
+package br.com.everoot.tarefasescolar.View;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -21,6 +21,8 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+
+import br.com.everoot.tarefasescolar.R;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener{
 
@@ -56,7 +58,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             Log.i("GOOGLE SIGN IN NAME:", account.getDisplayName());
             Log.i("GOOGLE SIGN IN EMAIL:", account.getEmail());
 //            Log.i("GOOGLE SIGN IN PHOTO:", account.getPhotoUrl().toString());
-            Intent intent = new Intent(this, IngressActivity.class);
+            Intent intent = new Intent(this, UserDataActivity.class);
             startActivity(intent);
         }
     }
