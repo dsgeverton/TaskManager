@@ -1,6 +1,6 @@
 package br.com.everoot.tarefasescolar.Model;
 
-class Tarefa {
+public class Tarefa {
 
     private String id;
     private String nome;
@@ -48,3 +48,4 @@ class Tarefa {
         this.local = local;
     }
 }
+
