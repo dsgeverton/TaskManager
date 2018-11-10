@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "635369457355",
+    "firebase_url": "https://taskmanager-beta.firebaseio.com",
+    "project_id": "taskmanager-beta",
+    "storage_bucket": "taskmanager-beta.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:635369457355:android:42c6bb9a1d715326",
+        "android_client_info": {
+          "package_name": "br.com.everoot.tarefasescolar"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "635369457355-2ame2j3168dqkbhb8b3hek0d0qbjav98.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "br.com.everoot.tarefasescolar",
+            "certificate_hash": "5d6ccbf1552d282933a19246a5dfb8eb3f3877f9"
+          }
+        },
+        {
+          "client_id": "635369457355-qqhmnmgjklvfjb9lmmla7mdc9063fv5f.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCCMAcglAsUsg_nPvA4SWuig5_iEEWtM5c"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "635369457355-qqhmnmgjklvfjb9lmmla7mdc9063fv5f.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
