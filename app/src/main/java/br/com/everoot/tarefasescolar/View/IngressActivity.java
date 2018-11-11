@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -25,6 +26,8 @@ public class IngressActivity extends AppCompatActivity {
         auth = FirebaseAuth.getInstance();
         firebaseUser = auth.getCurrentUser();
         Log.e("CREATE", "USER FIREBASE:   ############    "+firebaseUser.getDisplayName());
+
+
     }
 
     @Override
@@ -38,7 +41,7 @@ public class IngressActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle item selection
         switch (item.getItemId()) {
-            case R.id.config:
+            case R.id.me:
                 Intent intent = new Intent(IngressActivity.this, UserDataActivity.class);
                 startActivity(intent);
                 return true;
