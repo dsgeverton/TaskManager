@@ -6,11 +6,10 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.squareup.picasso.Picasso;
-
+import java.util.Objects;
 import br.com.everoot.tarefasescolar.R;
 
 public class UserDataActivity extends AppCompatActivity {
@@ -21,10 +20,15 @@ public class UserDataActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Objects.requireNonNull(getSupportActionBar()).hide(); //Esta linha contém o código necessário.
         setContentView(R.layout.activity_userdata);
 
         mAuth = FirebaseAuth.getInstance();
         currentUser = mAuth.getCurrentUser();
+
+        if (currentUser == null){
+            finish();
+        }
 
         TextView t1 = findViewById(R.id.tvNome);
         TextView t2 = findViewById(R.id.tvUid);
@@ -41,7 +45,7 @@ public class UserDataActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 FirebaseAuth.getInstance().signOut();
-                finish();
+                finishAffinity();
             }
         });
     }
