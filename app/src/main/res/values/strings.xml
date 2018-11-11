@@ -19,4 +19,10 @@
     <string name="imagem_do_usuario">Imagem do usuário</string>
     <string name="welcome">Bem-vindo ao gerenciador de tarefas!</string>
     <string name="fa_a_o_login_com_o_google_para_comecar">Faça o login com o Google para começar...</string>
+    <string name="criar_minha_turma">Criar minha turma</string>
+    <string name="vou_entrar_em_uma">Vou entrar em uma...</string>
+    <string name="cole_o_id_da_turma_aqui">Cole o ID da turma aqui...</string>
+    <string name="ir">ir</string>
+    <string name="configuracoes">Configurações</string>
+    <string name="ajuda">Ajuda</string>
 </resources>

@@ -22,6 +22,8 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 
+import java.util.Objects;
+
 import br.com.everoot.tarefasescolar.R;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener{
@@ -35,6 +37,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Objects.requireNonNull(getSupportActionBar()).hide(); //Esta linha contém o código necessário.
         setContentView(R.layout.activity_login);
 
         mViewHolder.sign_in = findViewById(R.id.sign_in_button);
@@ -58,7 +61,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             Log.i("GOOGLE SIGN IN NAME:", account.getDisplayName());
             Log.i("GOOGLE SIGN IN EMAIL:", account.getEmail());
 //            Log.i("GOOGLE SIGN IN PHOTO:", account.getPhotoUrl().toString());
-            Intent intent = new Intent(this, UserDataActivity.class);
+            Intent intent = new Intent(this, IngressActivity.class);
             startActivity(intent);
         }
     }
