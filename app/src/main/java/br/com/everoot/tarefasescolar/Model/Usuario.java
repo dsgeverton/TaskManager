@@ -10,6 +10,18 @@ public class Usuario {
     // atributo para guarda turma em que o usuário está ligado
     private String idTurma;
 
+    public Usuario() { }
+
+    public Usuario(String token, String id, String nome, String sobrenome, String email, boolean isAdmin, String idTurma) {
+        this.token = token;
+        this.id = id;
+        this.nome = nome;
+        this.sobrenome = sobrenome;
+        this.email = email;
+        this.isAdmin = isAdmin;
+        this.idTurma = idTurma;
+    }
+
     public String getToken() {
         return token;
     }

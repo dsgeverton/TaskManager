@@ -21,12 +21,20 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.Objects;
+import java.util.UUID;
 
+import br.com.everoot.tarefasescolar.Model.Usuario;
 import br.com.everoot.tarefasescolar.R;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener{
+
+    // Write a message to the database
+    FirebaseDatabase database = FirebaseDatabase.getInstance();
+    DatabaseReference myRef = database.getReference("users");
 
     private GoogleSignInClient mGoogleSignInClient;
     private FirebaseAuth mAuth;
@@ -60,7 +68,18 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             Log.i("GOOGLE SIGN IN ID:", account.getUid());
             Log.i("GOOGLE SIGN IN NAME:", account.getDisplayName());
             Log.i("GOOGLE SIGN IN EMAIL:", account.getEmail());
-//            Log.i("GOOGLE SIGN IN PHOTO:", account.getPhotoUrl().toString());
+            Log.i("GOOGLE SIGN IN PHOTO:", account.getPhotoUrl().toString());
+
+            // cadastrar o usuário no database
+            Usuario usuario = new Usuario();
+            usuario.setId(account.getUid());
+            usuario.setAdmin(false);
+            usuario.setEmail(account.getEmail());
+            usuario.setIdTurma(null);
+            usuario.setToken(account.getIdToken(true).toString());
+            usuario.setNome(account.getDisplayName());
+            myRef.child(usuario.getId()).setValue(usuario);
+
             Intent intent = new Intent(this, IngressActivity.class);
             startActivity(intent);
         }
