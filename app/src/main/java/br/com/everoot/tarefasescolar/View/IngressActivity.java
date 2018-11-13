@@ -118,7 +118,7 @@ public class IngressActivity extends AppCompatActivity implements View.OnClickLi
                     // whenever data at this location is updated.
                     Turma turma = dataSnapshot.child(turmaID).getValue(Turma.class);
                     if (turma==null){
-                        Toast.makeText(IngressActivity.this, "Turma não encontrada", Toast.LENGTH_SHORT).show();
+//                        Toast.makeText(IngressActivity.this, "Turma não encontrada", Toast.LENGTH_SHORT).show();
                         new MaterialStyledDialog.Builder(IngressActivity.this)
                                 .setTitle("Turma não encontrada!\n \uD83D\uDE1E")
                                 .setStyle(Style.HEADER_WITH_TITLE)
@@ -132,7 +132,7 @@ public class IngressActivity extends AppCompatActivity implements View.OnClickLi
                                 .show();
 
                     } else {
-                        Toast.makeText(IngressActivity.this, "Turma encontrada", Toast.LENGTH_SHORT).show();
+//                        Toast.makeText(IngressActivity.this, "Turma encontrada", Toast.LENGTH_SHORT).show();
                         Log.d("TAG", "Value is: " + turma.getNome());
                         new MaterialStyledDialog.Builder(IngressActivity.this)
                                 .setTitle("Turma encontrada!")

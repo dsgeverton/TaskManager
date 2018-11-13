@@ -146,7 +146,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     public void onClick(View view) {
         int id = view.getId();
         if (id == R.id.sign_in_button){
-            Toast.makeText(LoginActivity.this, "Button pressed...", Toast.LENGTH_SHORT).show();
+//            Toast.makeText(LoginActivity.this, "Button pressed...", Toast.LENGTH_SHORT).show();
             signIn();
         }
         else{
