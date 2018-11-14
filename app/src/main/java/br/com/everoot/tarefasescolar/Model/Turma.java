@@ -5,13 +5,13 @@ import java.util.List;
 public class Turma {
     private String id;
     private String nome;
-    private int numero;
+    private String numero;
     private List<Tarefa> tarefas;
     private String idAdmin;
 
     public Turma() {}
 
-    public Turma(String id, String nome, int numero, List<Tarefa> tarefas, String idAdmin) {
+    public Turma(String id, String nome, String numero, List<Tarefa> tarefas, String idAdmin) {
         this.id = id;
         this.nome = nome;
         this.numero = numero;
@@ -43,11 +43,11 @@ public class Turma {
         this.nome = nome;
     }
 
-    public int getNumero() {
+    public String getNumero() {
         return numero;
     }
 
-    public void setNumero(int numero) {
+    public void setNumero(String numero) {
         this.numero = numero;
     }
 

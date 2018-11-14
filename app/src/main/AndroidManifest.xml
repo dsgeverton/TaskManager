@@ -28,7 +28,8 @@
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
 
-        <activity android:name=".View.IngressActivity"></activity>
+        <activity android:name=".View.IngressActivity" />
+        <activity android:name=".View.CreateClassActivity"></activity>
     </application>
 
 </manifest>

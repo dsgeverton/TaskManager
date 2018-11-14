@@ -21,8 +21,11 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.Objects;
 import java.util.UUID;
@@ -62,7 +65,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
     }
 
-    private void updateUI(FirebaseUser account) {
+    private void updateUI(final FirebaseUser account) {
 
         if (account != null){
             Log.i("GOOGLE SIGN IN ID:", account.getUid());
@@ -70,15 +73,32 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             Log.i("GOOGLE SIGN IN EMAIL:", account.getEmail());
             Log.i("GOOGLE SIGN IN PHOTO:", account.getPhotoUrl().toString());
 
-            // cadastrar o usuário no database
+
+            myRef.child(account.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
             Usuario usuario = new Usuario();
-            usuario.setId(account.getUid());
-            usuario.setAdmin(false);
-            usuario.setEmail(account.getEmail());
-            usuario.setIdTurma(null);
-            usuario.setToken(account.getIdToken(true).toString());
-            usuario.setNome(account.getDisplayName());
-            myRef.child(usuario.getId()).setValue(usuario);
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    usuario = dataSnapshot.getValue(Usuario.class);
+
+                    if (usuario == null){
+                        // cadastrar o usuário no database
+                        usuario = new Usuario();
+                        usuario.setId(account.getUid());
+                        usuario.setAdmin(false);
+                        usuario.setEmail(account.getEmail());
+                        usuario.setIdTurma(null);
+                        usuario.setToken(account.getIdToken(true).toString());
+                        usuario.setNome(account.getDisplayName());
+                        Log.i("======== LOGIN", "BUSCANDO NO DB O USUARIO: "+ usuario.getNome());
+                        myRef.child(usuario.getId()).setValue(usuario);
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            });
 
             Intent intent = new Intent(this, IngressActivity.class);
             startActivity(intent);
