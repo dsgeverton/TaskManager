@@ -101,7 +101,8 @@ public class IngressActivity extends AppCompatActivity implements View.OnClickLi
                 break;
 
             case R.id.btnCriarTurma:
-
+                Intent intent = new Intent(IngressActivity.this, CreateClassActivity.class);
+                startActivity(intent);
                 break;
         }
     }

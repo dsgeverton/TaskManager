@@ -28,7 +28,7 @@ public class UserDataActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Objects.requireNonNull(getSupportActionBar()).hide(); //Esta linha contém o código necessário.
+        Objects.requireNonNull(getSupportActionBar()).hide(); //Esta linha contém o código para ocultar a actionbar da activity.
         setContentView(R.layout.activity_userdata);
 
         mAuth = FirebaseAuth.getInstance();
