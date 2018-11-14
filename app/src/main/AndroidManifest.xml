@@ -30,6 +30,7 @@
 
         <activity android:name=".View.IngressActivity" />
         <activity android:name=".View.CreateClassActivity"></activity>
+        <activity android:name=".View.AboutActivity" />
     </application>
 
 </manifest>

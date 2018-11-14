@@ -33,8 +33,9 @@ public class IngressActivity extends AppCompatActivity implements View.OnClickLi
     private FirebaseAuth auth;
     private FirebaseUser firebaseUser;
     private ViewHolder mViewHolder= new ViewHolder();
-    FirebaseDatabase database;
-    DatabaseReference myRef;
+    private FirebaseDatabase database;
+    private DatabaseReference myRef;
+    private Intent intent;
 
 
     @Override
@@ -70,10 +71,12 @@ public class IngressActivity extends AppCompatActivity implements View.OnClickLi
         // Handle item selection
         switch (item.getItemId()) {
             case R.id.me:
-                Intent intent = new Intent(IngressActivity.this, UserDataActivity.class);
+                intent = new Intent(IngressActivity.this, UserDataActivity.class);
                 startActivity(intent);
                 return true;
             case R.id.help:
+                intent = new Intent(IngressActivity.this, AboutActivity.class);
+                startActivity(intent);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
