@@ -138,8 +138,8 @@ public class IngressActivity extends AppCompatActivity implements View.OnClickLi
                                 .setTitle("Turma encontrada!")
                                 .setDescription("A turma que você está prestes a ingressar é: \n\n"+ turma.toString())
                                 .setIcon(R.drawable.me)
-                                .setHeaderDrawable(R.drawable.help)
-                                .withDarkerOverlay(true)
+                                .setHeaderDrawable(R.drawable.background)
+//                                .withDarkerOverlay(true)
                                 .setPositiveText("OK")
                                 .onPositive(new MaterialDialog.SingleButtonCallback() {
                                     @Override
@@ -171,3 +171,4 @@ public class IngressActivity extends AppCompatActivity implements View.OnClickLi
         EditText turmaID;
     }
 }
+
