@@ -1,8 +1,6 @@
 package br.com.everoot.tarefasescolar.View;
 
 import android.content.Intent;
-import android.location.Location;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
@@ -29,9 +27,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-
 import java.util.Objects;
-
 import br.com.everoot.tarefasescolar.Model.Usuario;
 import br.com.everoot.tarefasescolar.R;
 
@@ -56,7 +52,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
         mViewHolder.sign_in = findViewById(R.id.sign_in_button);
         mViewHolder.sign_in.setOnClickListener(this);
-        mViewHolder.progressBar = findViewById(R.id.progressBar);
 
         // obter a instancia do Firebase
         mAuth = FirebaseAuth.getInstance();

@@ -35,4 +35,11 @@
     <string name="concordo_com_os_termos_de_uso">Concordo com os Termos de Uso</string>
     <string name="termos_de_uso">Termos de Uso</string>
     <string name="sobre">Sobre</string>
+    <string name="title_activity_home_class">HomeClassActivity</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">Android Studio</string>
+    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="action_settings">Settings</string>
 </resources>
