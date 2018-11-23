@@ -1,12 +1,15 @@
 package br.com.everoot.tarefasescolar.View;
 
 import android.content.Intent;
+import android.location.Location;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -28,7 +31,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.Objects;
-import java.util.UUID;
 
 import br.com.everoot.tarefasescolar.Model.Usuario;
 import br.com.everoot.tarefasescolar.R;
@@ -36,14 +38,15 @@ import br.com.everoot.tarefasescolar.R;
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener{
 
     // Write a message to the database
-    FirebaseDatabase database = FirebaseDatabase.getInstance();
-    DatabaseReference myRef = database.getReference("users");
-
+    private FirebaseDatabase database = FirebaseDatabase.getInstance();
+    private DatabaseReference myRef = database.getReference("users");
+    private Intent signInIntent;
     private GoogleSignInClient mGoogleSignInClient;
     private FirebaseAuth mAuth;
     private static final String TAG = "TESTE";
     private static final int RC_SIGN_IN = 9001;
     private ViewHolder mViewHolder = new ViewHolder();
+    private Intent intent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +56,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
         mViewHolder.sign_in = findViewById(R.id.sign_in_button);
         mViewHolder.sign_in.setOnClickListener(this);
+        mViewHolder.progressBar = findViewById(R.id.progressBar);
 
         // obter a instancia do Firebase
         mAuth = FirebaseAuth.getInstance();
@@ -92,21 +96,29 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                         Log.i("======== LOGIN", "BUSCANDO NO DB O USUARIO: "+ usuario.getNome());
                         myRef.child(usuario.getId()).setValue(usuario);
                     }
+
+                    if (usuario.getIdTurma()!=null){
+                        intent = new Intent(LoginActivity.this, HomeClassActivity.class);
+                        finish();
+                        startActivity(intent);
+                    } else {
+                        intent = new Intent(LoginActivity.this, IngressActivity.class);
+                        finish();
+                        startActivity(intent);
+                    }
                 }
 
                 @Override
                 public void onCancelled(@NonNull DatabaseError databaseError) {
-
+                    Log.i("======== LOGIN", "ERRO AO BUSCAR O USUARIO: " + databaseError);
                 }
             });
-
-            Intent intent = new Intent(this, IngressActivity.class);
-            startActivity(intent);
         }
     }
 
+
     private void signIn() {
-        Intent signInIntent = mGoogleSignInClient.getSignInIntent();
+        signInIntent = mGoogleSignInClient.getSignInIntent();
         startActivityForResult(signInIntent, RC_SIGN_IN);
     }
 
@@ -176,6 +188,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     public static class ViewHolder{
         SignInButton sign_in;
+        ProgressBar progressBar;
     }
 
 }
