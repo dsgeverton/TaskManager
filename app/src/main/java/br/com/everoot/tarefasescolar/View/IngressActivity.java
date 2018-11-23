@@ -25,17 +25,23 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.UUID;
+
 import br.com.everoot.tarefasescolar.Model.Turma;
+import br.com.everoot.tarefasescolar.Model.Usuario;
 import br.com.everoot.tarefasescolar.R;
 
 public class IngressActivity extends AppCompatActivity implements View.OnClickListener{
 
     private FirebaseAuth auth;
-    private FirebaseUser firebaseUser;
+    private FirebaseUser currentUser;
     private ViewHolder mViewHolder= new ViewHolder();
     private FirebaseDatabase database;
     private DatabaseReference myRef;
     private Intent intent;
+    private Usuario usuario;
+
+    private DatabaseReference reference;
 
 
     @Override
@@ -45,6 +51,7 @@ public class IngressActivity extends AppCompatActivity implements View.OnClickLi
 
         database = FirebaseDatabase.getInstance();
         myRef = database.getReference("turmas");
+        reference = database.getReference();
 
         mViewHolder.ir = findViewById(R.id.btnIr);
         mViewHolder.criarTurma = findViewById(R.id.btnCriarTurma);
@@ -54,8 +61,8 @@ public class IngressActivity extends AppCompatActivity implements View.OnClickLi
         mViewHolder.ir.setOnClickListener(this);
 
         auth = FirebaseAuth.getInstance();
-        firebaseUser = auth.getCurrentUser();
-        Log.e("CREATE", "USER FIREBASE:   ############    "+firebaseUser.getDisplayName());
+        currentUser = auth.getCurrentUser();
+        Log.e("CREATE", "USER FIREBASE:   ############    "+ currentUser.getDisplayName());
 
     }
 
@@ -86,8 +93,8 @@ public class IngressActivity extends AppCompatActivity implements View.OnClickLi
     @Override
     protected void onResume() {
         super.onResume();
-        if (firebaseUser == null){
-            Log.e("RESUME", "USER FIREBASE:   ############    "+firebaseUser.getDisplayName());
+        if (currentUser == null){
+            Log.e("RESUME", "USER FIREBASE:   ############    "+ currentUser.getDisplayName());
             finish();
         }
     }
@@ -144,11 +151,12 @@ public class IngressActivity extends AppCompatActivity implements View.OnClickLi
                                 .setIcon(R.drawable.me)
                                 .setHeaderDrawable(R.drawable.background)
 //                                .withDarkerOverlay(true)
-                                .setPositiveText("OK")
+                                .setPositiveText("Entrar")
                                 .onPositive(new MaterialDialog.SingleButtonCallback() {
                                     @Override
                                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                                         Log.d("MaterialStyledDialogs", "Do something!");
+                                        ingressarUsuario();
                                     }})
                                 .setNegativeText("Calcelar")
                                 .onNegative(new MaterialDialog.SingleButtonCallback() {
@@ -168,6 +176,36 @@ public class IngressActivity extends AppCompatActivity implements View.OnClickLi
                 }
             });
         }
+    }
+
+    private void ingressarUsuario() {
+        reference.child("users").child(currentUser.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                usuario = new Usuario();
+                usuario = dataSnapshot.getValue(Usuario.class);
+                if (usuario != null) {
+                    if (usuario.getIdTurma()==null){
+                        reference.child("users").child(currentUser.getUid()).child("idTurma").setValue(mViewHolder.turmaID.getText().toString());
+                        reference.child("users").child(currentUser.getUid()).child("admin").setValue(false);
+                        Intent intent = new Intent(IngressActivity.this, HomeClassActivity.class);
+                        finish();
+                        startActivity(intent);
+
+                    } else {
+                        Toast.makeText(IngressActivity.this, "Este usuário já está vinculado a uma turma", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+//        Log.i("============UPDATING", "USER IDTURMA: "+ usuario.getIdTurma());
+
     }
 
     private class ViewHolder {
