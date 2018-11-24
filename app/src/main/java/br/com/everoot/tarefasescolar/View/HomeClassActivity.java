@@ -1,5 +1,8 @@
 package br.com.everoot.tarefasescolar.View;
 
+import android.content.ClipData;
+import android.content.ClipboardManager;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -29,6 +32,12 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
+import br.com.everoot.tarefasescolar.Model.Tarefa;
 import br.com.everoot.tarefasescolar.Model.Turma;
 import br.com.everoot.tarefasescolar.Model.Usuario;
 import br.com.everoot.tarefasescolar.R;
@@ -48,6 +57,9 @@ public class HomeClassActivity extends AppCompatActivity
     private Turma turma = new Turma();
     private Usuario usuario = new Usuario();
 
+    private ClipboardManager clipboard;
+    private ClipData clip;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,6 +71,7 @@ public class HomeClassActivity extends AppCompatActivity
         mAuth = FirebaseAuth.getInstance();
         currentUser = mAuth.getCurrentUser();
         inicializarDatabase();
+        obterUsuario();
 
         Log.i("==============  USER: ", currentUser.getDisplayName());
 
@@ -75,6 +88,9 @@ public class HomeClassActivity extends AppCompatActivity
                 } else {
                     Snackbar.make(view, "Bixão", Snackbar.LENGTH_LONG)
                             .setAction("Action", null).show();
+                    intent = new Intent(HomeClassActivity.this, CreateTaskActivity.class);
+                    intent.putExtra("turmaID", turma.getId());
+                    startActivity(intent);
                 }
             }
         });
@@ -108,10 +124,7 @@ public class HomeClassActivity extends AppCompatActivity
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 usuario = dataSnapshot.getValue(Usuario.class);
                 if (usuario!=null){
-//                    Toast.makeText(HomeClassActivity.this, "Recebeu "+usuario.getNome(), Toast.LENGTH_SHORT).show();
-                    mViewHolder.user_name.setText(usuario.getNome());
-                    Picasso.get().load(currentUser.getPhotoUrl()).into(mViewHolder.avatar);
-                    mViewHolder.user_email.setText(usuario.getEmail());
+//                    Toast.makeText(HomeClassActivity.this, "Recebeu "+usuario.getDescricao(), Toast.LENGTH_SHORT).show();
                     obterTurma(usuario);
                 } else{
                     Toast.makeText(HomeClassActivity.this, "Não recebeu", Toast.LENGTH_SHORT).show();
@@ -129,13 +142,28 @@ public class HomeClassActivity extends AppCompatActivity
         databaseReferenceTurma.child("turmas").child(usuario.getIdTurma()).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                turma = dataSnapshot.getValue(Turma.class);
-                if (turma!=null){
-                    mViewHolder.nome_turma.setText(turma.getNome());
-                    mViewHolder.numero_turma.setText(turma.getNumero());
-//                    Toast.makeText(HomeClassActivity.this, "Recebeu "+turma.getNome(), Toast.LENGTH_SHORT).show();
-                } else{
-//                    Toast.makeText(HomeClassActivity.this, "Não recebeu", Toast.LENGTH_SHORT).show();
+
+                if (dataSnapshot.getValue() != null){
+
+                    turma = dataSnapshot.getValue(Turma.class);
+                    Log.d("TAG","Nome da Turma: "+turma.getNome());
+                    Log.d("TAG","Numero da Turma: "+turma.getNumero());
+
+                    if (turma.getTarefas() != null) {
+                        Iterator it = turma.getTarefas().entrySet().iterator();
+                        while (it.hasNext()) {
+                            Map.Entry pair = (Map.Entry)it.next();
+                            Log.d("TAG","Tarefa: "+pair.getKey());
+                            it.remove(); // avoids a ConcurrentModificationException
+                        }
+                    }
+                    if (turma!=null){
+                        mViewHolder.nome_turma.setText(turma.getNome());
+                        mViewHolder.numero_turma.setText(turma.getNumero());
+    //                    Toast.makeText(HomeClassActivity.this, "Recebeu "+turma.getDescricao(), Toast.LENGTH_SHORT).show();
+                    } else{
+    //                    Toast.makeText(HomeClassActivity.this, "Não recebeu", Toast.LENGTH_SHORT).show();
+                    }
                 }
             }
 
@@ -166,9 +194,9 @@ public class HomeClassActivity extends AppCompatActivity
         mViewHolder.user_email = (TextView)  findViewById(R.id.tvUserEmail);
 
         Log.i("---------TESTE", "------------------------------------------"+usuario.getNome());
-        mViewHolder.user_name.setText(usuario.getNome());
+        mViewHolder.user_name.setText(currentUser.getDisplayName());
         Picasso.get().load(currentUser.getPhotoUrl()).into(mViewHolder.avatar);
-        mViewHolder.user_email.setText(usuario.getEmail());
+        mViewHolder.user_email.setText(currentUser.getEmail());
 
         return true;
     }
@@ -211,8 +239,11 @@ public class HomeClassActivity extends AppCompatActivity
             sendIntent.putExtra(Intent.EXTRA_TEXT, turma.getId());
             sendIntent.setType("text/plain");
             startActivity(sendIntent);
-        } else if (id == R.id.nav_send) {
-
+        } else if (id == R.id.nav_copy) {
+            clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+            clip = ClipData.newPlainText("Clip user ID", "Aqui está o meu ID:\n\n"+currentUser.getUid());
+            clipboard.setPrimaryClip(clip);
+            Toast.makeText(HomeClassActivity.this, "ID da turma copiado: "+turma.getId(), Toast.LENGTH_SHORT).show();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
