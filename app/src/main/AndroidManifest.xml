@@ -35,6 +35,7 @@
             android:name=".View.HomeClassActivity"
             android:label="@string/title_activity_home_class"
             android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity android:name=".View.CreateTaskActivity" />
     </application>
 
 </manifest>

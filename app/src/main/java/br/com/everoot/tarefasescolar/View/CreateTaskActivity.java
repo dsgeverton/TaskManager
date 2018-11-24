@@ -1,6 +1,7 @@
 package br.com.everoot.tarefasescolar.View;
 
 import android.app.TimePickerDialog;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -15,11 +16,20 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.UUID;
 
+import br.com.everoot.tarefasescolar.Model.Tarefa;
+import br.com.everoot.tarefasescolar.Model.Turma;
 import br.com.everoot.tarefasescolar.R;
 
 public class CreateTaskActivity extends AppCompatActivity implements TimePickerDialog.OnTimeSetListener {
@@ -28,6 +38,10 @@ public class CreateTaskActivity extends AppCompatActivity implements TimePickerD
     private String dataFormatada, problemas = "OPS!\n\n";
     private int hora, minuto;
     private SimpleDateFormat formataData;
+    private DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
+    private Turma turma;
+    private Tarefa tarefa;
+    private Intent getIdTurma;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +51,8 @@ public class CreateTaskActivity extends AppCompatActivity implements TimePickerD
         setSupportActionBar(toolbar);
 
         formataData = new SimpleDateFormat("dd/MM/yyyy");
+
+        getIdTurma = getIntent();
 
         mViewHolder.calendarView = findViewById(R.id.calendarView);
         mViewHolder.descricao = findViewById(R.id.editTextDescricaoTarefa);
@@ -68,9 +84,49 @@ public class CreateTaskActivity extends AppCompatActivity implements TimePickerD
                     snackbar.show();
                     problemas = "OPS!\n\n";
                 } else {
+                    salvarTarefa();
                 }
             }
         });
+    }
+
+    private void salvarTarefa() {
+        turma = new Turma();
+
+        databaseReference.child("turmas").child(getIdTurma.getStringExtra("turmaID")).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.getValue() != null){
+                    turma = dataSnapshot.getValue(Turma.class);
+                    if (turma != null){
+                        tarefa = new Tarefa();
+                        tarefa.setId(UUID.randomUUID().toString());
+                        tarefa.setData(dataFormatada);
+                        tarefa.setHora(mViewHolder.hora.getText().toString());
+                        tarefa.setLocal(mViewHolder.local.getText().toString());
+                        tarefa.setDescricao(mViewHolder.descricao.getText().toString());
+                        tarefa.setTurmaID(turma.getId());
+                        databaseReference.child("tarefas").child(tarefa.getId()).setValue(tarefa);
+                        databaseReference.child("turmas").child(turma.getId()).child("tarefas").child(tarefa.getId()).setValue("");
+                        limparCampos();
+                        finish();
+                    } else {
+//                        Toast.makeText(CreateTaskActivity.this, "Este usuário já está vinculado a uma turma", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    private void limparCampos() {
+        mViewHolder.descricao.setText("");
+        mViewHolder.local.setText("");
+        mViewHolder.hora.setText("");
     }
 
     private boolean validarCampos() {

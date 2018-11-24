@@ -29,9 +29,9 @@
                 android:icon="@drawable/ic_menu_share"
                 android:title="Compartilhar Código" />
             <item
-                android:id="@+id/nav_send"
-                android:icon="@drawable/ic_menu_send"
-                android:title="Enviar" />
+                android:id="@+id/nav_copy"
+                android:icon="@drawable/copy"
+                android:title="Copiar Código" />
         </menu>
     </item>
 

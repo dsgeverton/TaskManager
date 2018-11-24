@@ -141,7 +141,6 @@ public class CreateClassActivity extends AppCompatActivity implements View.OnCli
             });
 
             Log.i("============UPDATING", "USER IDTURMA: "+ usuario.getIdTurma());
-
         }
     }
 
@@ -151,6 +150,5 @@ public class CreateClassActivity extends AppCompatActivity implements View.OnCli
         CheckBox termosdeCadastro;
         Button cadastrarTurma;
         TextView termos;
-
     }
 }
