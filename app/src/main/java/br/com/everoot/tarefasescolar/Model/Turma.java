@@ -1,17 +1,18 @@
 package br.com.everoot.tarefasescolar.Model;
 
+import java.util.HashMap;
 import java.util.List;
 
 public class Turma {
     private String id;
     private String nome;
     private String numero;
-    private List<Tarefa> tarefas;
+    private HashMap<String, String> tarefas;
     private String idAdmin;
 
     public Turma() {}
 
-    public Turma(String id, String nome, String numero, List<Tarefa> tarefas, String idAdmin) {
+    public Turma(String id, String nome, String numero, HashMap<String, String> tarefas, String idAdmin) {
         this.id = id;
         this.nome = nome;
         this.numero = numero;
@@ -19,11 +20,11 @@ public class Turma {
         this.idAdmin = idAdmin;
     }
 
-    public List<Tarefa> getTarefas() {
+    public HashMap<String, String> getTarefas() {
         return tarefas;
     }
 
-    public void setTarefas(List<Tarefa> tarefas) {
+    public void setTarefas(HashMap<String, String> tarefas) {
         this.tarefas = tarefas;
     }
 

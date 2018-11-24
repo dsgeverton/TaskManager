@@ -3,10 +3,19 @@ package br.com.everoot.tarefasescolar.Model;
 public class Tarefa {
 
     private String id;
-    private String nome;
+    private String descricao;
     private String data;
     private String hora;
     private String local;
+    private String turmaID;
+
+    public String getTurmaID() {
+        return turmaID;
+    }
+
+    public void setTurmaID(String turmaID) {
+        this.turmaID = turmaID;
+    }
 
     public String getId() {
         return id;
@@ -16,12 +25,12 @@ public class Tarefa {
         this.id = id;
     }
 
-    public String getNome() {
-        return nome;
+    public String getDescricao() {
+        return descricao;
     }
 
-    public void setNome(String nome) {
-        this.nome = nome;
+    public void setDescricao(String descricao) {
+        this.descricao = descricao;
     }
 
     public String getData() {

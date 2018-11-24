@@ -12,7 +12,7 @@
     <string name="permission_rationale">"Contacts permissions are needed for providing email
         completions."
     </string>
-    <string name="nome">Nome</string>
+    <string name="descricao">Nome</string>
     <string name="uid">Uid</string>
     <string name="email">Email</string>
     <string name="sign_out">Sign out</string>
@@ -27,7 +27,7 @@
     <string name="ajuda">Ajuda</string>
     <string name="meu_perfil">Meu perfil</string>
     <string name="numero">Número</string>
-    <string name="sua_turma_tem_um_nome">Sua turma tem um nome?</string>
+    <string name="sua_turma_tem_um_nome">Sua turma tem um descricao?</string>
     <string name="sua_turma_tem_um_numero">Sua turma tem um número?</string>
     <string name="partiu_criar_sua_turma">Partiu criar sua turma?</string>
     <string name="lembre_se_que_quando_voc_cria_sua_turma_voc_se_torna_o_administrador_dela_ent_o_se_liga_nessa_responsabilidade_antes">Lembre-se que quando você cria sua turma, você se torna o administrador dela. Então se liga nessa responsabilidade antes...</string>

@@ -47,7 +47,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Objects.requireNonNull(getSupportActionBar()).hide(); //Esta linha contém o código necessário.
         setContentView(R.layout.activity_login);
 
         mViewHolder.sign_in = findViewById(R.id.sign_in_button);
