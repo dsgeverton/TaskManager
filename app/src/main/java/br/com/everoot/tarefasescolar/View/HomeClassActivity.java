@@ -2,6 +2,7 @@ package br.com.everoot.tarefasescolar.View;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.util.Log;
@@ -18,19 +19,34 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
+import br.com.everoot.tarefasescolar.Model.Turma;
+import br.com.everoot.tarefasescolar.Model.Usuario;
 import br.com.everoot.tarefasescolar.R;
 
 public class HomeClassActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private ViewHolder mViewHolder = new ViewHolder();
+    // Firebase user
     private FirebaseAuth mAuth;
     private FirebaseUser currentUser;
+    // Firebase DB
+    private FirebaseDatabase database;
+    private DatabaseReference databaseReferenceTurma;
+    private DatabaseReference databaseReferenceTarefa;
     private Intent intent;
+    private Turma turma = new Turma();
+    private Usuario usuario = new Usuario();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,24 +54,28 @@ public class HomeClassActivity extends AppCompatActivity
         setContentView(R.layout.activity_home_class);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
 //        INSTÂNCIAS DO BD E USUÁRIO
         //        Obter usuário logado
         mAuth = FirebaseAuth.getInstance();
         currentUser = mAuth.getCurrentUser();
-        if (currentUser ==null)
-            Toast.makeText(this, "Fudeu", Toast.LENGTH_SHORT).show();
-        else
-            Toast.makeText(this, "Não fudeu", Toast.LENGTH_SHORT).show();
+        inicializarDatabase();
 
         Log.i("==============  USER: ", currentUser.getDisplayName());
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
+        mViewHolder.nome_turma = findViewById(R.id.textView11NomeTurma);
+        mViewHolder.numero_turma = findViewById(R.id.textView11NumeroTurma);
+
+        mViewHolder.fab = findViewById(R.id.fab);
+        mViewHolder.fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                if (!usuario.isAdmin()){
+                    Snackbar.make(view, "Apenas o Administrador pode criar novas tarefas!", Snackbar.LENGTH_LONG)
+                            .setAction("Action", null).show();
+                } else {
+                    Snackbar.make(view, "Bixão", Snackbar.LENGTH_LONG)
+                            .setAction("Action", null).show();
+                }
             }
         });
 
@@ -68,7 +88,62 @@ public class HomeClassActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+    }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        obterUsuario();
+    }
+
+    private void inicializarDatabase() {
+        FirebaseApp.initializeApp(this);
+        database = FirebaseDatabase.getInstance();
+        databaseReferenceTurma = database.getReference();
+    }
+
+    private void obterUsuario() {
+        databaseReferenceTurma.child("users").child(currentUser.getUid()).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                usuario = dataSnapshot.getValue(Usuario.class);
+                if (usuario!=null){
+//                    Toast.makeText(HomeClassActivity.this, "Recebeu "+usuario.getNome(), Toast.LENGTH_SHORT).show();
+                    mViewHolder.user_name.setText(usuario.getNome());
+                    Picasso.get().load(currentUser.getPhotoUrl()).into(mViewHolder.avatar);
+                    mViewHolder.user_email.setText(usuario.getEmail());
+                    obterTurma(usuario);
+                } else{
+                    Toast.makeText(HomeClassActivity.this, "Não recebeu", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    private void obterTurma(Usuario usuario) {
+        databaseReferenceTurma.child("turmas").child(usuario.getIdTurma()).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                turma = dataSnapshot.getValue(Turma.class);
+                if (turma!=null){
+                    mViewHolder.nome_turma.setText(turma.getNome());
+                    mViewHolder.numero_turma.setText(turma.getNumero());
+//                    Toast.makeText(HomeClassActivity.this, "Recebeu "+turma.getNome(), Toast.LENGTH_SHORT).show();
+                } else{
+//                    Toast.makeText(HomeClassActivity.this, "Não recebeu", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
 
     }
 
@@ -90,10 +165,11 @@ public class HomeClassActivity extends AppCompatActivity
         mViewHolder.user_name = findViewById(R.id.tvUserNome);
         mViewHolder.user_email = (TextView)  findViewById(R.id.tvUserEmail);
 
-
+        Log.i("---------TESTE", "------------------------------------------"+usuario.getNome());
+        mViewHolder.user_name.setText(usuario.getNome());
         Picasso.get().load(currentUser.getPhotoUrl()).into(mViewHolder.avatar);
-        mViewHolder.user_name.setText(currentUser.getDisplayName());
-        mViewHolder.user_email.setText(currentUser.getEmail());
+        mViewHolder.user_email.setText(usuario.getEmail());
+
         return true;
     }
 
@@ -132,7 +208,7 @@ public class HomeClassActivity extends AppCompatActivity
             Intent sendIntent = new Intent();
             sendIntent.setAction(Intent.ACTION_SEND);
 //          Passar o ID da Turma
-            sendIntent.putExtra(Intent.EXTRA_TEXT, "This is my text to send.");
+            sendIntent.putExtra(Intent.EXTRA_TEXT, turma.getId());
             sendIntent.setType("text/plain");
             startActivity(sendIntent);
         } else if (id == R.id.nav_send) {
@@ -146,6 +222,7 @@ public class HomeClassActivity extends AppCompatActivity
 
     public class ViewHolder{
         ImageView avatar;
-        TextView user_name, user_email;
+        TextView user_name, user_email, nome_turma, numero_turma;
+        FloatingActionButton fab;
     }
 }
