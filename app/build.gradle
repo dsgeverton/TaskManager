@@ -7,8 +7,8 @@ android {
         applicationId "br.com.everoot.tarefasescolar"
         minSdkVersion 23
         targetSdkVersion 28
-        versionCode 1
-        versionName "1.0"
+        versionCode 0
+        versionName "0.10.41"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
