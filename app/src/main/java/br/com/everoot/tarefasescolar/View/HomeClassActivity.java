@@ -5,9 +5,9 @@ import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
@@ -18,13 +18,16 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.style.ImageSpan;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -41,10 +44,12 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+
 import br.com.everoot.tarefasescolar.Adapter.ClickRecyclerViewListener;
 import br.com.everoot.tarefasescolar.Adapter.TarefasAdapter;
 import br.com.everoot.tarefasescolar.Model.Tarefa;
@@ -111,6 +116,16 @@ public class HomeClassActivity extends AppCompatActivity
         mViewHolder.nome_turma = findViewById(R.id.textView11NomeTurma);
         mViewHolder.numero_turma = findViewById(R.id.textView11NumeroTurma);
         mViewHolder.recyclerView = findViewById(R.id.rv_Terefas);
+        mViewHolder.gerenciarTarefas = findViewById(R.id.switchEditarTarefas);
+
+        mViewHolder.gerenciarTarefas.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                if (mViewHolder.gerenciarTarefas.isChecked()){
+                    Snackbar.make(compoundButton, notificar(), Snackbar.LENGTH_LONG).setAction("Action", null).show();
+                }
+            }
+        });
 
         mViewHolder.fab = findViewById(R.id.fab);
 
@@ -121,8 +136,7 @@ public class HomeClassActivity extends AppCompatActivity
                     Snackbar.make(view, "Apenas o Administrador pode criar novas tarefas!", Snackbar.LENGTH_LONG)
                             .setAction("Action", null).show();
                 } else {
-                    Snackbar.make(view, "Bixão", Snackbar.LENGTH_LONG)
-                            .setAction("Action", null).show();
+
                     intent = new Intent(HomeClassActivity.this, CreateTaskActivity.class);
                     intent.putExtra("turmaID", turma.getId());
                     startActivity(intent);
@@ -139,6 +153,30 @@ public class HomeClassActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+    }
+
+    private SpannableString notificar() {
+
+        String text = "Clique no ícone ? para editar a tarefa";
+
+        //Posição onde colocar a imegem(posição da marca)
+        int imagePos = text.indexOf("?");
+
+        //Criar um SpannableString do texto
+        SpannableString spannableString = new SpannableString(text);
+
+        //Obter o drawable a inserir
+        Drawable drawable = getResources().getDrawable(R.drawable.common_full_open_on_phone);
+        drawable.setBounds(0, 0, drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight());
+
+        //Criar um ImageSpan do drawable
+        ImageSpan imageSpan = new ImageSpan(drawable, ImageSpan.ALIGN_BASELINE);
+
+        //Inserir a imagem(ImageSpan) no texto(SpannableString)
+        spannableString.setSpan(imageSpan,imagePos,imagePos+1, Spanned.SPAN_INCLUSIVE_INCLUSIVE);
+
+        //Atribuir o texto com a imagem ao TextView
+        return spannableString;
     }
 
     @Override
@@ -165,6 +203,13 @@ public class HomeClassActivity extends AppCompatActivity
                 usuario = dataSnapshot.getValue(Usuario.class);
                 if (usuario!=null){
 //                    Toast.makeText(HomeClassActivity.this, "Recebeu "+usuario.getDescricao(), Toast.LENGTH_SHORT).show();
+                    if (!usuario.isAdmin()){
+                        mViewHolder.gerenciarTarefas.setClickable(false);
+                        mViewHolder.gerenciarTarefas.setVisibility(View.INVISIBLE);
+                    } else {
+                        mViewHolder.gerenciarTarefas.setClickable(true);
+                        mViewHolder.gerenciarTarefas.setVisibility(View.VISIBLE);
+                    }
                     obterTurma(usuario);
                 } else{
                     Toast.makeText(HomeClassActivity.this, "Não recebeu", Toast.LENGTH_SHORT).show();
@@ -229,6 +274,7 @@ public class HomeClassActivity extends AppCompatActivity
                         "ID TURMA RECEBIDA: "+id);
                         if (tarefa.getTurmaID().equals(id)){
                             tarefas.add(tarefa);
+
                         }
                     }
                 }
@@ -319,32 +365,8 @@ public class HomeClassActivity extends AppCompatActivity
 
     @Override
     public void onClick(Object object) {
-
-    }
-
-    private void hideFloatingActionButton(FloatingActionButton fab) {
-        CoordinatorLayout.LayoutParams params = (CoordinatorLayout.LayoutParams) fab.getLayoutParams();
-        FloatingActionButton.Behavior behavior =
-                (FloatingActionButton.Behavior) params.getBehavior();
-
-        if (behavior != null) {
-            behavior.setAutoHideEnabled(false);
-        }
-
-        fab.hide();
-    }
-
-    private void showFloatingActionButton(FloatingActionButton fab) {
-        fab.show();
-        CoordinatorLayout.LayoutParams params =
-                (CoordinatorLayout.LayoutParams) fab.getLayoutParams();
-
-        FloatingActionButton.Behavior behavior =
-                (FloatingActionButton.Behavior) params.getBehavior();
-
-        if (behavior != null) {
-            behavior.setAutoHideEnabled(true);
-        }
+        if (mViewHolder.gerenciarTarefas.isChecked())
+            Toast.makeText(this, "Clicou", Toast.LENGTH_SHORT).show();
     }
 
     public class ViewHolder{
@@ -352,5 +374,6 @@ public class HomeClassActivity extends AppCompatActivity
         TextView user_name, user_email, nome_turma, numero_turma;
         FloatingActionButton fab;
         RecyclerView recyclerView;
+        Switch gerenciarTarefas;
     }
 }

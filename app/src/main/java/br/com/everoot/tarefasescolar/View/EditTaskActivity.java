@@ -33,7 +33,7 @@ import br.com.everoot.tarefasescolar.Model.Tarefa;
 import br.com.everoot.tarefasescolar.Model.Turma;
 import br.com.everoot.tarefasescolar.R;
 
-public class CreateTaskActivity extends AppCompatActivity implements TimePickerDialog.OnTimeSetListener, RewardedVideoAdListener  {
+public class EditTaskActivity extends AppCompatActivity implements TimePickerDialog.OnTimeSetListener, RewardedVideoAdListener  {
 
     private ViewHolder mViewHolder = new ViewHolder();
     private String dataFormatada, problemas = "OPS!\n\n";
@@ -77,7 +77,7 @@ public class CreateTaskActivity extends AppCompatActivity implements TimePickerD
         mViewHolder.setHora.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                TimePickerDialog timePickerDialog = new TimePickerDialog(CreateTaskActivity.this, CreateTaskActivity.this, 00,00,true);
+                TimePickerDialog timePickerDialog = new TimePickerDialog(EditTaskActivity.this, EditTaskActivity.this, 00,00,true);
                 timePickerDialog.show();
             }
         });
@@ -155,7 +155,7 @@ public class CreateTaskActivity extends AppCompatActivity implements TimePickerD
             Log.i("--- DATAS ---", "-----------------------------------------ENTROUUUUUUUUUUUUUUUUU IF");
             return false;
         }
-            Log.i("--- DATAS ---", "------ENTROUUUUUUUUUUUUUUUUU ELSE\n"+mViewHolder.descricao.getText()+mViewHolder.local.getText()+mViewHolder.hora.getText());
+        Log.i("--- DATAS ---", "------ENTROUUUUUUUUUUUUUUUUU ELSE\n"+mViewHolder.descricao.getText()+mViewHolder.local.getText()+mViewHolder.hora.getText());
         return true;
     }
 
@@ -163,36 +163,36 @@ public class CreateTaskActivity extends AppCompatActivity implements TimePickerD
 
         if (dataFormatada!=null){
 
-        Calendar currentCalendar = Calendar.getInstance();
-        Calendar calendarSelected = Calendar.getInstance();
+            Calendar currentCalendar = Calendar.getInstance();
+            Calendar calendarSelected = Calendar.getInstance();
 
-        Date dataAtual = new Date();
-        String dataAtualFormatada = formataData.format(dataAtual);
+            Date dataAtual = new Date();
+            String dataAtualFormatada = formataData.format(dataAtual);
 
-        dataAtual = null;
-        try {
-            dataAtual = formataData.parse(dataAtualFormatada);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
+            dataAtual = null;
+            try {
+                dataAtual = formataData.parse(dataAtualFormatada);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
 
-        Date date2 = null;
-        try {
-            date2 = formataData.parse(dataFormatada);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        currentCalendar.setTime(dataAtual);
-        calendarSelected.setTime(date2);
+            Date date2 = null;
+            try {
+                date2 = formataData.parse(dataFormatada);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+            currentCalendar.setTime(dataAtual);
+            calendarSelected.setTime(date2);
 
-        Log.i("--- DATAS ---", "DATA ATUAL: "+dataAtual+"\nDATA SELECIONADA: "+date2);
+            Log.i("--- DATAS ---", "DATA ATUAL: "+dataAtual+"\nDATA SELECIONADA: "+date2);
 
-        if (calendarSelected.compareTo(currentCalendar) < 1) {
+            if (calendarSelected.compareTo(currentCalendar) < 1) {
 //            Toast.makeText(CreateTaskActivity.this, "A tarefa só pode ser agendada numa data superior à hoje!", Toast.LENGTH_SHORT).show();
-            problemas += "A tarefa só pode ser agendada numa data superior à hoje!\n";
-            return false;
-        }
-        return true;
+                problemas += "A tarefa só pode ser agendada numa data superior à hoje!\n";
+                return false;
+            }
+            return true;
         }
         problemas += "A tarefa só pode ser agendada numa data superior à hoje!\n";
         return false;

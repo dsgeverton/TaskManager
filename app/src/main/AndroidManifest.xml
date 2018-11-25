@@ -15,13 +15,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".View.LoginActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+        <activity android:name=".View.LoginActivity" />
         <activity android:name=".View.UserDataActivity" />
 
         <meta-data
@@ -31,8 +25,7 @@
         <!-- Sample AdMob App ID: ca-app-pub-3940256099942544~3347511713 -->
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
-            android:value="ca-app-pub-1382026910941878~8813684086"/>
-
+            android:value="ca-app-pub-1382026910941878~8813684086" />
 
         <activity android:name=".View.IngressActivity" />
         <activity android:name=".View.CreateClassActivity" />
@@ -40,8 +33,23 @@
         <activity
             android:name=".View.HomeClassActivity"
             android:label="@string/title_activity_home_class"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".View.CreateTaskActivity" />
+        <activity android:name=".View.SplashActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <service android:name=".Service.MyFirebaseInstanceService">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+
+        <activity android:name=".View.EditTaskActivity"></activity>
     </application>
 
 </manifest>
