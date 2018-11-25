@@ -146,7 +146,7 @@ public class IngressActivity extends AppCompatActivity implements View.OnClickLi
                         new MaterialStyledDialog.Builder(IngressActivity.this)
                                 .setTitle("Turma encontrada!")
                                 .setDescription("A turma que você está prestes a ingressar é: \n\n"+ turma.toString())
-                                .setIcon(R.drawable.me)
+                                .setIcon(R.drawable.ic_smile)
                                 .setHeaderDrawable(R.drawable.background)
 //                                .withDarkerOverlay(true)
                                 .setPositiveText("Entrar")

@@ -28,6 +28,12 @@
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
 
+        <!-- Sample AdMob App ID: ca-app-pub-3940256099942544~3347511713 -->
+        <meta-data
+            android:name="com.google.android.gms.ads.APPLICATION_ID"
+            android:value="ca-app-pub-1382026910941878~8813684086"/>
+
+
         <activity android:name=".View.IngressActivity" />
         <activity android:name=".View.CreateClassActivity" />
         <activity android:name=".View.AboutActivity" />

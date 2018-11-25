@@ -23,9 +23,15 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.InterstitialAd;
+import com.google.android.gms.ads.MobileAds;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -63,12 +69,37 @@ public class HomeClassActivity extends AppCompatActivity
     private ClipData clip;
     private List<Tarefa> tarefas = new ArrayList<>();
 
+    //ADS
+    private InterstitialAd mInterstitialAd;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home_class);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        // INICIALIZAR ANUNCIO
+        // Sample AdMob app ID: ca-app-pub-3940256099942544~3347511713
+        MobileAds.initialize(this, "ca-app-pub-1382026910941878~8813684086");
+        mInterstitialAd = new InterstitialAd(this);
+        mInterstitialAd.setAdUnitId("ca-app-pub-1382026910941878/4222744523");
+        mInterstitialAd.loadAd(new AdRequest.Builder().build());
+        mInterstitialAd.setAdListener(new AdListener() {
+            @Override
+            public void onAdClosed() {
+                // Load the next interstitial.
+            }
+
+            @Override
+            public void onAdLoaded() {
+                // Code to be executed when an ad finishes loading.
+                mInterstitialAd.show();
+            }
+
+        });
+
 //        INSTÂNCIAS DO BD E USUÁRIO
         //        Obter usuário logado
         mAuth = FirebaseAuth.getInstance();
@@ -82,9 +113,6 @@ public class HomeClassActivity extends AppCompatActivity
         mViewHolder.recyclerView = findViewById(R.id.rv_Terefas);
 
         mViewHolder.fab = findViewById(R.id.fab);
-
-
-
 
         mViewHolder.fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -117,6 +145,11 @@ public class HomeClassActivity extends AppCompatActivity
     protected void onStart() {
         super.onStart();
         obterUsuario();
+        if (mInterstitialAd.isLoaded()) {
+            mInterstitialAd.show();
+        } else {
+            Log.d("TAG", "The interstitial wasn't loaded yet.");
+        }
     }
 
     private void inicializarDatabase() {
@@ -264,12 +297,6 @@ public class HomeClassActivity extends AppCompatActivity
 
         if (id == R.id.nav_camera) {
             // Handle the camera action
-
-        } else if (id == R.id.nav_gallery) {
-
-        } else if (id == R.id.nav_slideshow) {
-
-        } else if (id == R.id.nav_manage) {
 
         } else if (id == R.id.nav_share) {
             Intent sendIntent = new Intent();
