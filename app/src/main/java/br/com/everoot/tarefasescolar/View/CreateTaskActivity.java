@@ -47,7 +47,7 @@ public class CreateTaskActivity extends AppCompatActivity implements TimePickerD
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_task);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.my_toolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.create_task_toolbar);
         setSupportActionBar(toolbar);
 
         formataData = new SimpleDateFormat("dd/MM/yyyy");
@@ -57,10 +57,12 @@ public class CreateTaskActivity extends AppCompatActivity implements TimePickerD
         mViewHolder.calendarView = findViewById(R.id.calendarView);
         mViewHolder.descricao = findViewById(R.id.editTextDescricaoTarefa);
         mViewHolder.local = findViewById(R.id.editTextLocalTarefa);
-        mViewHolder.hora = findViewById(R.id.editTextHoraTarefa);
+        mViewHolder.hora = findViewById(R.id.tvSetHora);
+        mViewHolder.conteudo = findViewById(R.id.editTextConteudo);
+        mViewHolder.setHora = findViewById(R.id.buttonHora);
         mViewHolder.salvarTarefa = findViewById(R.id.buttonSalvarTarefa);
 
-        mViewHolder.hora.setOnClickListener(new View.OnClickListener() {
+        mViewHolder.setHora.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 TimePickerDialog timePickerDialog = new TimePickerDialog(CreateTaskActivity.this, CreateTaskActivity.this, 00,00,true);
@@ -105,6 +107,7 @@ public class CreateTaskActivity extends AppCompatActivity implements TimePickerD
                         tarefa.setHora(mViewHolder.hora.getText().toString());
                         tarefa.setLocal(mViewHolder.local.getText().toString());
                         tarefa.setDescricao(mViewHolder.descricao.getText().toString());
+                        tarefa.setConteudo(mViewHolder.conteudo.getText().toString());
                         tarefa.setTurmaID(turma.getId());
                         databaseReference.child("tarefas").child(tarefa.getId()).setValue(tarefa);
                         databaseReference.child("turmas").child(turma.getId()).child("tarefas").child(tarefa.getId()).setValue("");
@@ -131,7 +134,8 @@ public class CreateTaskActivity extends AppCompatActivity implements TimePickerD
 
     private boolean validarCampos() {
 
-        if (mViewHolder.descricao.getText().toString().equals("") || mViewHolder.local.getText().toString().equals("") || mViewHolder.hora.getText().toString().equals("")){
+        if (mViewHolder.descricao.getText().toString().equals("") || mViewHolder.local.getText().toString().equals("") || mViewHolder.hora.getText().toString().equals("")
+                || mViewHolder.hora.getText().toString().equals("")){
             problemas += "Existem campos em branco!";
             Log.i("--- DATAS ---", "-----------------------------------------ENTROUUUUUUUUUUUUUUUUU IF");
             return false;
@@ -181,16 +185,13 @@ public class CreateTaskActivity extends AppCompatActivity implements TimePickerD
 
     @Override
     public void onTimeSet(TimePicker timePicker, int i, int i1) {
-        hora = i;
-        minuto = i1;
-        if (minuto < 10)
-            minuto = 00;
-        mViewHolder.hora.setText(hora+":"+minuto);
+        mViewHolder.hora.setText(timePicker.getHour()+":"+timePicker.getMinute());
     }
 
     private class ViewHolder{
-        EditText descricao, local, hora;
+        EditText descricao, local, conteudo;
+        TextView hora;
         CalendarView calendarView;
-        Button salvarTarefa;
+        Button salvarTarefa, setHora;
     }
 }

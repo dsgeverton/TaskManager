@@ -1,5 +1,6 @@
 package br.com.everoot.tarefasescolar.View;
 
+
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
@@ -7,18 +8,22 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.util.Log;
-import android.view.View;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -37,13 +42,15 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import br.com.everoot.tarefasescolar.Adapter.ClickRecyclerViewListener;
+import br.com.everoot.tarefasescolar.Adapter.TarefasAdapter;
 import br.com.everoot.tarefasescolar.Model.Tarefa;
 import br.com.everoot.tarefasescolar.Model.Turma;
 import br.com.everoot.tarefasescolar.Model.Usuario;
 import br.com.everoot.tarefasescolar.R;
 
 public class HomeClassActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener, ClickRecyclerViewListener {
 
     private ViewHolder mViewHolder = new ViewHolder();
     // Firebase user
@@ -51,14 +58,14 @@ public class HomeClassActivity extends AppCompatActivity
     private FirebaseUser currentUser;
     // Firebase DB
     private FirebaseDatabase database;
-    private DatabaseReference databaseReferenceTurma;
-    private DatabaseReference databaseReferenceTarefa;
+    private DatabaseReference databaseReference;
     private Intent intent;
     private Turma turma = new Turma();
     private Usuario usuario = new Usuario();
-
     private ClipboardManager clipboard;
     private ClipData clip;
+
+    private List<Tarefa> tarefas = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,12 +78,12 @@ public class HomeClassActivity extends AppCompatActivity
         mAuth = FirebaseAuth.getInstance();
         currentUser = mAuth.getCurrentUser();
         inicializarDatabase();
-        obterUsuario();
 
         Log.i("==============  USER: ", currentUser.getDisplayName());
 
         mViewHolder.nome_turma = findViewById(R.id.textView11NomeTurma);
         mViewHolder.numero_turma = findViewById(R.id.textView11NumeroTurma);
+        mViewHolder.recyclerView = findViewById(R.id.rv_Terefas);
 
         mViewHolder.fab = findViewById(R.id.fab);
         mViewHolder.fab.setOnClickListener(new View.OnClickListener() {
@@ -115,11 +122,11 @@ public class HomeClassActivity extends AppCompatActivity
     private void inicializarDatabase() {
         FirebaseApp.initializeApp(this);
         database = FirebaseDatabase.getInstance();
-        databaseReferenceTurma = database.getReference();
+        databaseReference = database.getReference();
     }
 
     private void obterUsuario() {
-        databaseReferenceTurma.child("users").child(currentUser.getUid()).addValueEventListener(new ValueEventListener() {
+        databaseReference.child("users").child(currentUser.getUid()).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 usuario = dataSnapshot.getValue(Usuario.class);
@@ -139,7 +146,8 @@ public class HomeClassActivity extends AppCompatActivity
     }
 
     private void obterTurma(Usuario usuario) {
-        databaseReferenceTurma.child("turmas").child(usuario.getIdTurma()).addValueEventListener(new ValueEventListener() {
+
+        databaseReference.child("turmas").child(usuario.getIdTurma()).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
@@ -160,6 +168,7 @@ public class HomeClassActivity extends AppCompatActivity
                     if (turma!=null){
                         mViewHolder.nome_turma.setText(turma.getNome());
                         mViewHolder.numero_turma.setText(turma.getNumero());
+                        obterTarefas(turma.getId());
     //                    Toast.makeText(HomeClassActivity.this, "Recebeu "+turma.getDescricao(), Toast.LENGTH_SHORT).show();
                     } else{
     //                    Toast.makeText(HomeClassActivity.this, "Não recebeu", Toast.LENGTH_SHORT).show();
@@ -173,6 +182,37 @@ public class HomeClassActivity extends AppCompatActivity
             }
         });
 
+    }
+
+    private void obterTarefas(final String id) {
+        databaseReference.child("tarefas").orderByChild("data").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                tarefas.clear();
+                for (DataSnapshot obj: dataSnapshot.getChildren()){
+                    Tarefa tarefa = obj.getValue(Tarefa.class);
+                    if (tarefa != null){
+                        Log.i("TAREFA =", "ID TAREFA RECEBIDA: "+ tarefa.getTurmaID() +
+                        "ID TURMA RECEBIDA: "+id);
+                        if (tarefa.getTurmaID().equals(id)){
+                            tarefas.add(tarefa);
+                        }
+                    }
+                }
+
+                mViewHolder.recyclerView.setAdapter(new TarefasAdapter(HomeClassActivity.this, tarefas, HomeClassActivity.this));
+                RecyclerView.LayoutManager layout = new LinearLayoutManager(HomeClassActivity.this,
+                        LinearLayoutManager.VERTICAL, false);
+
+                mViewHolder.recyclerView.setLayoutManager(layout);
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
     }
 
     @Override
@@ -251,9 +291,15 @@ public class HomeClassActivity extends AppCompatActivity
         return true;
     }
 
+    @Override
+    public void onClick(Object object) {
+
+    }
+
     public class ViewHolder{
         ImageView avatar;
         TextView user_name, user_email, nome_turma, numero_turma;
         FloatingActionButton fab;
+        RecyclerView recyclerView;
     }
 }

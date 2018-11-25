@@ -4,10 +4,19 @@ public class Tarefa {
 
     private String id;
     private String descricao;
+    private String conteudo;
     private String data;
     private String hora;
     private String local;
     private String turmaID;
+
+    public String getConteudo() {
+        return conteudo;
+    }
+
+    public void setConteudo(String conteudo) {
+        this.conteudo = conteudo;
+    }
 
     public String getTurmaID() {
         return turmaID;

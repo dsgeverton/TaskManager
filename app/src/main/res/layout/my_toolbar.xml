@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v7.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="?attr/actionBarSize"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:id="@+id/create_task_toolbar"
+    android:layout_height="wrap_content"
     android:background="?attr/colorPrimary"
     app:popupTheme="@style/AppTheme.PopupOverlay"
-    app:titleTextColor="#FFF"
-    app:title="Criar Tarefa">
+    app:title="Criar Tarefa"
+    app:titleTextColor="#FFF">
 
 </android.support.v7.widget.Toolbar>

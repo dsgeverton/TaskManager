@@ -1,5 +1,6 @@
 package br.com.everoot.tarefasescolar.View;
 
+import android.content.Intent;
 import android.graphics.Paint;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -142,6 +143,14 @@ public class CreateClassActivity extends AppCompatActivity implements View.OnCli
 
             Log.i("============UPDATING", "USER IDTURMA: "+ usuario.getIdTurma());
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent intent = new Intent(this, IngressActivity.class);
+        finish();
+        startActivity(intent);
     }
 
     public class ViewHolder{
