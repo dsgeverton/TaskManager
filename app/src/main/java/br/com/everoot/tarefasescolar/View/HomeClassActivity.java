@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
@@ -18,15 +19,13 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -36,12 +35,10 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
-
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-
 import br.com.everoot.tarefasescolar.Adapter.ClickRecyclerViewListener;
 import br.com.everoot.tarefasescolar.Adapter.TarefasAdapter;
 import br.com.everoot.tarefasescolar.Model.Tarefa;
@@ -64,7 +61,6 @@ public class HomeClassActivity extends AppCompatActivity
     private Usuario usuario = new Usuario();
     private ClipboardManager clipboard;
     private ClipData clip;
-
     private List<Tarefa> tarefas = new ArrayList<>();
 
     @Override
@@ -86,6 +82,10 @@ public class HomeClassActivity extends AppCompatActivity
         mViewHolder.recyclerView = findViewById(R.id.rv_Terefas);
 
         mViewHolder.fab = findViewById(R.id.fab);
+
+
+
+
         mViewHolder.fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -154,24 +154,24 @@ public class HomeClassActivity extends AppCompatActivity
                 if (dataSnapshot.getValue() != null){
 
                     turma = dataSnapshot.getValue(Turma.class);
-                    Log.d("TAG","Nome da Turma: "+turma.getNome());
-                    Log.d("TAG","Numero da Turma: "+turma.getNumero());
+                    if (turma != null){
+                        Log.d("TAG","Nome da Turma: "+turma.getNome());
+                        Log.d("TAG","Numero da Turma: "+turma.getNumero());
 
-                    if (turma.getTarefas() != null) {
-                        Iterator it = turma.getTarefas().entrySet().iterator();
-                        while (it.hasNext()) {
-                            Map.Entry pair = (Map.Entry)it.next();
-                            Log.d("TAG","Tarefa: "+pair.getKey());
-                            it.remove(); // avoids a ConcurrentModificationException
+                        if (turma.getTarefas() != null) {
+                            Iterator it = turma.getTarefas().entrySet().iterator();
+                            while (it.hasNext()) {
+                                Map.Entry pair = (Map.Entry)it.next();
+                                Log.d("TAG","Tarefa: "+pair.getKey());
+                                it.remove(); // avoids a ConcurrentModificationException
+                            }
                         }
-                    }
-                    if (turma!=null){
-                        mViewHolder.nome_turma.setText(turma.getNome());
-                        mViewHolder.numero_turma.setText(turma.getNumero());
-                        obterTarefas(turma.getId());
-    //                    Toast.makeText(HomeClassActivity.this, "Recebeu "+turma.getDescricao(), Toast.LENGTH_SHORT).show();
-                    } else{
-    //                    Toast.makeText(HomeClassActivity.this, "Não recebeu", Toast.LENGTH_SHORT).show();
+                        if (turma!=null){
+                            mViewHolder.nome_turma.setText(turma.getNome());
+                            mViewHolder.numero_turma.setText(turma.getNumero());
+                            obterTarefas(turma.getId());
+        //                    Toast.makeText(HomeClassActivity.this, "Recebeu "+turma.getDescricao(), Toast.LENGTH_SHORT).show();
+                        }
                     }
                 }
             }
@@ -203,9 +203,7 @@ public class HomeClassActivity extends AppCompatActivity
                 mViewHolder.recyclerView.setAdapter(new TarefasAdapter(HomeClassActivity.this, tarefas, HomeClassActivity.this));
                 RecyclerView.LayoutManager layout = new LinearLayoutManager(HomeClassActivity.this,
                         LinearLayoutManager.VERTICAL, false);
-
                 mViewHolder.recyclerView.setLayoutManager(layout);
-
             }
 
             @Override
@@ -217,7 +215,7 @@ public class HomeClassActivity extends AppCompatActivity
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
@@ -266,6 +264,7 @@ public class HomeClassActivity extends AppCompatActivity
 
         if (id == R.id.nav_camera) {
             // Handle the camera action
+
         } else if (id == R.id.nav_gallery) {
 
         } else if (id == R.id.nav_slideshow) {
@@ -286,7 +285,7 @@ public class HomeClassActivity extends AppCompatActivity
             Toast.makeText(HomeClassActivity.this, "ID da turma copiado: "+turma.getId(), Toast.LENGTH_SHORT).show();
         }
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
@@ -294,6 +293,31 @@ public class HomeClassActivity extends AppCompatActivity
     @Override
     public void onClick(Object object) {
 
+    }
+
+    private void hideFloatingActionButton(FloatingActionButton fab) {
+        CoordinatorLayout.LayoutParams params = (CoordinatorLayout.LayoutParams) fab.getLayoutParams();
+        FloatingActionButton.Behavior behavior =
+                (FloatingActionButton.Behavior) params.getBehavior();
+
+        if (behavior != null) {
+            behavior.setAutoHideEnabled(false);
+        }
+
+        fab.hide();
+    }
+
+    private void showFloatingActionButton(FloatingActionButton fab) {
+        fab.show();
+        CoordinatorLayout.LayoutParams params =
+                (CoordinatorLayout.LayoutParams) fab.getLayoutParams();
+
+        FloatingActionButton.Behavior behavior =
+                (FloatingActionButton.Behavior) params.getBehavior();
+
+        if (behavior != null) {
+            behavior.setAutoHideEnabled(true);
+        }
     }
 
     public class ViewHolder{

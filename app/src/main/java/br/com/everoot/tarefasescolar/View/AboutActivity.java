@@ -1,10 +1,7 @@
 package br.com.everoot.tarefasescolar.View;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-
-import java.util.Objects;
-
+import android.support.v7.app.AppCompatActivity;
 import br.com.everoot.tarefasescolar.R;
 
 public class AboutActivity extends AppCompatActivity {

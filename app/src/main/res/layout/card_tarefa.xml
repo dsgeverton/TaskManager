@@ -4,15 +4,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_marginTop="15dp"
     app:cardBackgroundColor="@color/primaryLightColor"
     app:cardCornerRadius="5dp"
-    app:cardElevation="5dp"
-    android:layout_marginTop="15dp"
-    app:contentPadding="10dp">
+    app:cardElevation="5dp">
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_margin="10dp"
         android:background="@drawable/background">
 
 
@@ -110,4 +110,31 @@
             app:layout_constraintTop_toBottomOf="@+id/textViewLocalTarefa" />
 
     </android.support.constraint.ConstraintLayout>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/floatingActionButtonEditarTarefa"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:clickable="false"
+        android:layout_gravity="end"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="0dp"
+        app:elevation="16dp"
+        app:showMotionSpec="@anim/md_styled_zoom_in"
+        app:srcCompat="@drawable/settings"
+        app:useCompatPadding="false" />
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/floatingActionButtonDeletarTarefa"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end"
+        android:layout_marginTop="80dp"
+        android:layout_marginEnd="0dp"
+        android:clickable="false"
+        android:elevation="16dp"
+        app:backgroundTint="@color/md_edittext_error"
+        app:showMotionSpec="@anim/md_styled_zoom_in"
+        app:srcCompat="@android:drawable/ic_menu_delete" />
+
 </android.support.v7.widget.CardView>

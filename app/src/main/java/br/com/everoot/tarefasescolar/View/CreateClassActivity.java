@@ -13,7 +13,6 @@ import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.github.javiersantos.materialstyleddialogs.MaterialStyledDialog;
@@ -25,9 +24,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-
 import java.util.UUID;
-
 import br.com.everoot.tarefasescolar.Model.Turma;
 import br.com.everoot.tarefasescolar.Model.Usuario;
 import br.com.everoot.tarefasescolar.R;
@@ -118,20 +115,24 @@ public class CreateClassActivity extends AppCompatActivity implements View.OnCli
             reference.child("users").child(currentUser.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                    usuario = dataSnapshot.getValue(Usuario.class);
-                    if (usuario.getIdTurma()==null){
-                        Turma turma = new Turma();
-                        turma.setId(UUID.randomUUID().toString());
-                        turma.setTarefas(null);
-                        turma.setNome(mViewHolder.nomeTurma.getText().toString());
-                        turma.setNumero(mViewHolder.numeroTurma.getText().toString());
-                        turma.setIdAdmin(currentUser.getUid());
-                        reference.child("turmas").child(turma.getId()).setValue(turma);
-                        usuario.setIdTurma(turma.getId());
-                        reference.child("users").child(currentUser.getUid()).child("idTurma").setValue(turma.getId());
-                        reference.child("users").child(currentUser.getUid()).child("admin").setValue(true);
-                    } else {
-                        Toast.makeText(CreateClassActivity.this, "Este usuário já está vinculado a uma turma", Toast.LENGTH_SHORT).show();
+                    if (dataSnapshot.getValue() != null){
+                        usuario = dataSnapshot.getValue(Usuario.class);
+                        if (usuario != null) {
+                            if (usuario.getIdTurma()==null){
+                                Turma turma = new Turma();
+                                turma.setId(UUID.randomUUID().toString());
+                                turma.setTarefas(null);
+                                turma.setNome(mViewHolder.nomeTurma.getText().toString());
+                                turma.setNumero(mViewHolder.numeroTurma.getText().toString());
+                                turma.setIdAdmin(currentUser.getUid());
+                                reference.child("turmas").child(turma.getId()).setValue(turma);
+                                usuario.setIdTurma(turma.getId());
+                                reference.child("users").child(currentUser.getUid()).child("idTurma").setValue(turma.getId());
+                                reference.child("users").child(currentUser.getUid()).child("admin").setValue(true);
+                            } else {
+                                Toast.makeText(CreateClassActivity.this, "Este usuário já está vinculado a uma turma", Toast.LENGTH_SHORT).show();
+                            }
+                        }
                     }
                 }
 

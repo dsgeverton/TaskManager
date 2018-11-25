@@ -2,10 +2,10 @@ package br.com.everoot.tarefasescolar.View;
 
 import android.app.TimePickerDialog;
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
@@ -14,20 +14,16 @@ import android.widget.CalendarView;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.TimePicker;
-import android.widget.Toast;
-
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.UUID;
-
 import br.com.everoot.tarefasescolar.Model.Tarefa;
 import br.com.everoot.tarefasescolar.Model.Turma;
 import br.com.everoot.tarefasescolar.R;
@@ -113,8 +109,6 @@ public class CreateTaskActivity extends AppCompatActivity implements TimePickerD
                         databaseReference.child("turmas").child(turma.getId()).child("tarefas").child(tarefa.getId()).setValue("");
                         limparCampos();
                         finish();
-                    } else {
-//                        Toast.makeText(CreateTaskActivity.this, "Este usuário já está vinculado a uma turma", Toast.LENGTH_SHORT).show();
                     }
                 }
             }

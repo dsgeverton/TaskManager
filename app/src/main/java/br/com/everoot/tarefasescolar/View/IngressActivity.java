@@ -58,6 +58,7 @@ public class IngressActivity extends AppCompatActivity implements View.OnClickLi
 
         auth = FirebaseAuth.getInstance();
         currentUser = auth.getCurrentUser();
+        assert currentUser != null;
         Log.e("CREATE", "USER FIREBASE:   ############    "+ currentUser.getDisplayName());
 
     }
@@ -90,7 +91,7 @@ public class IngressActivity extends AppCompatActivity implements View.OnClickLi
     protected void onResume() {
         super.onResume();
         if (currentUser == null){
-            Log.e("RESUME", "USER FIREBASE:   ############    "+ currentUser.getDisplayName());
+            Log.e("RESUME", "USER FIREBASE:   ############    ");
             finish();
         }
     }
@@ -125,7 +126,7 @@ public class IngressActivity extends AppCompatActivity implements View.OnClickLi
                     // This method is called once with the initial value and again
                     // whenever data at this location is updated.
                     Turma turma = dataSnapshot.child(turmaID).getValue(Turma.class);
-                    if (turma==null){
+                    if (turma == null){
 //                        Toast.makeText(IngressActivity.this, "Turma não encontrada", Toast.LENGTH_SHORT).show();
                         new MaterialStyledDialog.Builder(IngressActivity.this)
                                 .setTitle("Turma não encontrada!\n \uD83D\uDE1E")

@@ -7,7 +7,6 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
-import android.widget.ProgressBar;
 import android.widget.Toast;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -69,7 +68,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             Log.i("GOOGLE SIGN IN ID:", account.getUid());
             Log.i("GOOGLE SIGN IN NAME:", account.getDisplayName());
             Log.i("GOOGLE SIGN IN EMAIL:", account.getEmail());
-            Log.i("GOOGLE SIGN IN PHOTO:", account.getPhotoUrl().toString());
+            Log.i("GOOGLE SIGN IN PHOTO:", Objects.requireNonNull(account.getPhotoUrl()).toString());
 
 
             myRef.child(account.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
@@ -126,7 +125,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             try {
                 // Google Sign In was successful, authenticate with Firebase
                 GoogleSignInAccount account = task.getResult(ApiException.class);
-                firebaseAuthWithGoogle(account);
+                if (account != null) {
+                    firebaseAuthWithGoogle(account);
+                }
             } catch (ApiException e) {
                 // Google Sign In failed, update UI appropriately
                 Log.w(TAG, "Google sign in failed", e);
@@ -182,7 +183,5 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     public static class ViewHolder{
         SignInButton sign_in;
-        ProgressBar progressBar;
     }
-
 }
