@@ -7,12 +7,11 @@
     tools:context=".View.AboutActivity">
 
     <ScrollView
-        android:layout_width="361dp"
-        android:layout_height="495dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
+        android:id="@+id/scrollView2"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -21,27 +20,27 @@
         <android.support.constraint.ConstraintLayout
             android:id="@+id/linearLayout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="match_parent">
 
 
             <ImageView
                 android:id="@+id/imageView3"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="64dp"
+                android:layout_height="64dp"
+                android:background="@drawable/ic_information"
+                android:scaleType="center"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:src="@tools:sample/avatars[3]" />
+                app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
                 android:id="@+id/tvSobre"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
                 android:text="Sobre"
                 android:textAllCaps="false"
                 android:textColor="@color/colorAccent"
-                android:textSize="18sp"
+                android:textSize="36sp"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.501"
@@ -50,11 +49,13 @@
 
             <TextView
                 android:id="@+id/tvLogin"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:text=" - Login"
+                android:layout_marginTop="32dp"
+                android:text="Login"
+                android:textAlignment="center"
                 android:textAllCaps="true"
+                android:textSize="18sp"
                 android:textStyle="bold|italic"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
@@ -63,9 +64,11 @@
 
             <TextView
                 android:id="@+id/tvTextoLogin"
-                android:layout_width="365dp"
+                android:layout_width="0dp"
                 android:layout_height="68dp"
+                android:layout_marginTop="8dp"
                 android:text="Para utilizar o aplicativo é necessário se registrar utilizando sua conta do google. Dessa forma suas informações serão relacionadas às turmas que participa e manteremos você sempre atualizado sobre suas tarefas!"
+                android:textAlignment="center"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.016"
                 app:layout_constraintStart_toStartOf="parent"
@@ -73,11 +76,13 @@
 
             <TextView
                 android:id="@+id/tvIngresso"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:text="- Ingresso no Aplicativo"
+                android:text="Ingresso no Aplicativo"
+                android:textAlignment="center"
                 android:textAllCaps="true"
+                android:textSize="18sp"
                 android:textStyle="bold|italic"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
@@ -86,9 +91,11 @@
 
             <TextView
                 android:id="@+id/tvTextoIngresso"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
                 android:text="É possível ingressar no aplicativo de duas formas: criando uma turma e se tornando um administrador ou ingressando em uma já existente através do ID fornecido pelo criador dela."
+                android:textAlignment="center"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
@@ -96,11 +103,13 @@
 
             <TextView
                 android:id="@+id/tvTarefas"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:text="- Tarefas"
+                android:layout_marginTop="8dp"
+                android:text="Tarefas"
+                android:textAlignment="center"
                 android:textAllCaps="true"
+                android:textSize="18sp"
                 android:textStyle="bold|italic"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
@@ -109,9 +118,10 @@
 
             <TextView
                 android:id="@+id/tvTextoTarefas"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:text="Como administrador de uma turma, você poderá adicionar e excluir as tarefas agendadas para sua turma. Todos os participantes que ingressarem na turma com o ID utilizado na criação poderão visualizá-las. Caso você ingresse na turma apenas como participante, você terá acesso à todas as tarefas adicionadas pelo administrador e será notificado assim que uma nova seja criada."
+                android:textAlignment="center"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
@@ -120,6 +130,19 @@
 
         </android.support.constraint.ConstraintLayout>
     </ScrollView>
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:text="versão 0.9.35"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/scrollView2" />
 
 
 </android.support.constraint.ConstraintLayout>

@@ -14,6 +14,13 @@ import android.widget.CalendarView;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
+
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.reward.RewardItem;
+import com.google.android.gms.ads.reward.RewardedVideoAd;
+import com.google.android.gms.ads.reward.RewardedVideoAdListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -28,7 +35,7 @@ import br.com.everoot.tarefasescolar.Model.Tarefa;
 import br.com.everoot.tarefasescolar.Model.Turma;
 import br.com.everoot.tarefasescolar.R;
 
-public class CreateTaskActivity extends AppCompatActivity implements TimePickerDialog.OnTimeSetListener {
+public class CreateTaskActivity extends AppCompatActivity implements TimePickerDialog.OnTimeSetListener, RewardedVideoAdListener  {
 
     private ViewHolder mViewHolder = new ViewHolder();
     private String dataFormatada, problemas = "OPS!\n\n";
@@ -39,12 +46,24 @@ public class CreateTaskActivity extends AppCompatActivity implements TimePickerD
     private Tarefa tarefa;
     private Intent getIdTurma;
 
+    // ADS
+    private RewardedVideoAd mRewardedVideoAd;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_task);
         Toolbar toolbar = (Toolbar) findViewById(R.id.create_task_toolbar);
         setSupportActionBar(toolbar);
+
+        // INICIALIZE ADS
+        MobileAds.initialize(this, "ca-app-pub-1382026910941878~8813684086");
+
+        // Use an activity context to get the rewarded video instance.
+        mRewardedVideoAd = MobileAds.getRewardedVideoAdInstance(this);
+        mRewardedVideoAd.setRewardedVideoAdListener(this);
+        loadRewardedVideoAd();
 
         formataData = new SimpleDateFormat("dd/MM/yyyy");
 
@@ -86,6 +105,11 @@ public class CreateTaskActivity extends AppCompatActivity implements TimePickerD
                 }
             }
         });
+    }
+
+    private void loadRewardedVideoAd() {
+        mRewardedVideoAd.loadAd("ca-app-pub-1382026910941878/5146488547",
+                new AdRequest.Builder().build());
     }
 
     private void salvarTarefa() {
@@ -180,6 +204,47 @@ public class CreateTaskActivity extends AppCompatActivity implements TimePickerD
     @Override
     public void onTimeSet(TimePicker timePicker, int i, int i1) {
         mViewHolder.hora.setText(timePicker.getHour()+":"+timePicker.getMinute());
+    }
+
+    @Override
+    public void onRewardedVideoAdLoaded() {
+        Log.i("ADS LOADED", "------------------------- LOADED");
+        mRewardedVideoAd.show();
+    }
+
+    @Override
+    public void onRewardedVideoAdOpened() {
+        Log.i("ADS OPENED", "------------------------- OPENED");
+    }
+
+    @Override
+    public void onRewardedVideoStarted() {
+
+    }
+
+    @Override
+    public void onRewardedVideoAdClosed() {
+
+    }
+
+    @Override
+    public void onRewarded(RewardItem rewardItem) {
+
+    }
+
+    @Override
+    public void onRewardedVideoAdLeftApplication() {
+
+    }
+
+    @Override
+    public void onRewardedVideoAdFailedToLoad(int i) {
+
+    }
+
+    @Override
+    public void onRewardedVideoCompleted() {
+
     }
 
     private class ViewHolder{
