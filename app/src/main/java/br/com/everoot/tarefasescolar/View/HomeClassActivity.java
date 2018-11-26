@@ -110,6 +110,7 @@ public class HomeClassActivity extends AppCompatActivity
         mAuth = FirebaseAuth.getInstance();
         currentUser = mAuth.getCurrentUser();
         inicializarDatabase();
+        obterUsuario();
 
         Log.i("==============  USER: ", currentUser.getDisplayName());
 
@@ -188,6 +189,12 @@ public class HomeClassActivity extends AppCompatActivity
         } else {
             Log.d("TAG", "The interstitial wasn't loaded yet.");
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        obterTarefas(turma.getId());
     }
 
     private void inicializarDatabase() {
@@ -365,8 +372,14 @@ public class HomeClassActivity extends AppCompatActivity
 
     @Override
     public void onClick(Object object) {
-        if (mViewHolder.gerenciarTarefas.isChecked())
+            Tarefa tarefa = (Tarefa) object;
+        if (mViewHolder.gerenciarTarefas.isChecked()) {
             Toast.makeText(this, "Clicou", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(this, EditTaskActivity.class);
+            intent.putExtra("turmaID", turma.getId());
+            intent.putExtra("tarefaID", tarefa.getId());
+            startActivity(intent);
+        }
     }
 
     public class ViewHolder{

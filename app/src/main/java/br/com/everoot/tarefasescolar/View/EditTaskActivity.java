@@ -8,12 +8,18 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CalendarView;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.TimePicker;
+
+import com.afollestad.materialdialogs.DialogAction;
+import com.afollestad.materialdialogs.MaterialDialog;
+import com.github.javiersantos.materialstyleddialogs.MaterialStyledDialog;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.ads.reward.RewardItem;
@@ -24,6 +30,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -39,9 +46,8 @@ public class EditTaskActivity extends AppCompatActivity implements TimePickerDia
     private String dataFormatada, problemas = "OPS!\n\n";
     private SimpleDateFormat formataData;
     private DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
-    private Turma turma;
     private Tarefa tarefa;
-    private Intent getIdTurma;
+    private Intent getIdTarefa;
 
     // ADS
     private RewardedVideoAd mRewardedVideoAd;
@@ -50,8 +56,8 @@ public class EditTaskActivity extends AppCompatActivity implements TimePickerDia
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_create_task);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.create_task_toolbar);
+        setContentView(R.layout.activity_edit_task);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.edit_task_toolbar);
         setSupportActionBar(toolbar);
 
         // INICIALIZE ADS
@@ -64,15 +70,15 @@ public class EditTaskActivity extends AppCompatActivity implements TimePickerDia
 
         formataData = new SimpleDateFormat("dd/MM/yyyy");
 
-        getIdTurma = getIntent();
+        getIdTarefa = getIntent();
 
-        mViewHolder.calendarView = findViewById(R.id.calendarView);
-        mViewHolder.descricao = findViewById(R.id.editTextDescricaoTarefa);
-        mViewHolder.local = findViewById(R.id.editTextLocalTarefa);
-        mViewHolder.hora = findViewById(R.id.tvSetHora);
-        mViewHolder.conteudo = findViewById(R.id.editTextConteudo);
-        mViewHolder.setHora = findViewById(R.id.buttonHora);
-        mViewHolder.salvarTarefa = findViewById(R.id.buttonSalvarTarefa);
+        mViewHolder.calendarView = findViewById(R.id.calendarViewEdit);
+        mViewHolder.descricao = findViewById(R.id.editTextDescricaoTarefaEdit);
+        mViewHolder.local = findViewById(R.id.editTextLocalTarefaEdit);
+        mViewHolder.hora = findViewById(R.id.tvSetHoraEdit);
+        mViewHolder.conteudo = findViewById(R.id.editTextConteudoEdit);
+        mViewHolder.setHora = findViewById(R.id.buttonHoraEdit);
+        mViewHolder.salvarTarefa = findViewById(R.id.buttonSalvarTarefaEdit);
 
         mViewHolder.setHora.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -102,6 +108,64 @@ public class EditTaskActivity extends AppCompatActivity implements TimePickerDia
                 }
             }
         });
+
+        carregarDados();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_edittask_options, menu);
+
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle item selection
+        switch (item.getItemId()) {
+            case R.id.action_deletar:
+                // DELETAR TAREFA DO BANCO
+                databaseReference.child("tarefas").child(getIdTarefa.getStringExtra("tarefaID")).addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        if (dataSnapshot.getValue() != null){
+                            tarefa = dataSnapshot.getValue(Tarefa.class);
+                            if (tarefa != null){
+                                new MaterialStyledDialog.Builder(EditTaskActivity.this)
+                                        .setTitle("Atenção!")
+                                        .setDescription("Você deseja realmente excluir esta tarefa?")
+                                        .setIcon(R.drawable.ic_alert)
+//                                        .setHeaderDrawable(R.drawable.background)
+                                        .setPositiveText("Confirmar")
+                                        .onPositive(new MaterialDialog.SingleButtonCallback() {
+                                            @Override
+                                            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                                Log.d("MaterialStyledDialogs", "Do something!");
+                                                finish();
+                                                databaseReference.child("tarefas").child(getIdTarefa.getStringExtra("tarefaID")).removeValue();
+                                            }})
+                                        .setNegativeText("Calcelar")
+                                        .onNegative(new MaterialDialog.SingleButtonCallback() {
+                                            @Override
+                                            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                                Log.d("MaterialStyledDialogs", "Do something!");
+                                            }})
+                                        .show();
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
+
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     private void loadRewardedVideoAd() {
@@ -109,25 +173,44 @@ public class EditTaskActivity extends AppCompatActivity implements TimePickerDia
                 new AdRequest.Builder().build());
     }
 
-    private void salvarTarefa() {
-        turma = new Turma();
-
-        databaseReference.child("turmas").child(getIdTurma.getStringExtra("turmaID")).addListenerForSingleValueEvent(new ValueEventListener() {
+    private void carregarDados(){
+        databaseReference.child("tarefas").child(getIdTarefa.getStringExtra("tarefaID")).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.getValue() != null){
-                    turma = dataSnapshot.getValue(Turma.class);
-                    if (turma != null){
-                        tarefa = new Tarefa();
-                        tarefa.setId(UUID.randomUUID().toString());
+                    tarefa = dataSnapshot.getValue(Tarefa.class);
+                    if (tarefa != null){
+                        mViewHolder.descricao.setText(tarefa.getDescricao());
+                        mViewHolder.conteudo.setText(tarefa.getConteudo());
+                        mViewHolder.local.setText(tarefa.getLocal());
+                        mViewHolder.hora.setText(tarefa.getHora());
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    private void salvarTarefa() {
+
+        databaseReference.child("tarefas").child(getIdTarefa.getStringExtra("tarefaID")).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.getValue() != null){
+                    tarefa = dataSnapshot.getValue(Tarefa.class);
+                    if (tarefa != null){
+                        tarefa.setId(tarefa.getId());
                         tarefa.setData(dataFormatada);
                         tarefa.setHora(mViewHolder.hora.getText().toString());
                         tarefa.setLocal(mViewHolder.local.getText().toString());
                         tarefa.setDescricao(mViewHolder.descricao.getText().toString());
                         tarefa.setConteudo(mViewHolder.conteudo.getText().toString());
-                        tarefa.setTurmaID(turma.getId());
+                        tarefa.setTurmaID(getIdTarefa.getStringExtra("turmaID"));
                         databaseReference.child("tarefas").child(tarefa.getId()).setValue(tarefa);
-                        databaseReference.child("turmas").child(turma.getId()).child("tarefas").child(tarefa.getId()).setValue("");
                         limparCampos();
                         finish();
                     }

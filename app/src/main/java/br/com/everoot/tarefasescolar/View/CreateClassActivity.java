@@ -129,6 +129,9 @@ public class CreateClassActivity extends AppCompatActivity implements View.OnCli
                                 usuario.setIdTurma(turma.getId());
                                 reference.child("users").child(currentUser.getUid()).child("idTurma").setValue(turma.getId());
                                 reference.child("users").child(currentUser.getUid()).child("admin").setValue(true);
+                                Intent intent = new Intent(CreateClassActivity.this, HomeClassActivity.class);
+                                finish();
+                                startActivity(intent);
                             } else {
                                 Toast.makeText(CreateClassActivity.this, "Este usuário já está vinculado a uma turma", Toast.LENGTH_SHORT).show();
                             }

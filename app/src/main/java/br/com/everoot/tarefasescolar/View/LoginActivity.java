@@ -131,7 +131,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             } catch (ApiException e) {
                 // Google Sign In failed, update UI appropriately
                 Log.w(TAG, "Google sign in failed", e);
-                Toast.makeText(LoginActivity.this, "Login com o Google falhou...", Toast.LENGTH_SHORT).show();
+                Toast.makeText(LoginActivity.this, "Login com o Google falhou..."+ e, Toast.LENGTH_SHORT).show();
             }
         }
     }
