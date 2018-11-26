@@ -70,7 +70,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             Log.i("GOOGLE SIGN IN EMAIL:", account.getEmail());
             Log.i("GOOGLE SIGN IN PHOTO:", Objects.requireNonNull(account.getPhotoUrl()).toString());
 
-
             myRef.child(account.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
             Usuario usuario = new Usuario();
                 @Override
