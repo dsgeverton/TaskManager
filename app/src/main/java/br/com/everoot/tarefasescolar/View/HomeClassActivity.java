@@ -6,6 +6,7 @@ import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
@@ -210,13 +211,13 @@ public class HomeClassActivity extends AppCompatActivity
                 usuario = dataSnapshot.getValue(Usuario.class);
                 if (usuario!=null){
 //                    Toast.makeText(HomeClassActivity.this, "Recebeu "+usuario.getDescricao(), Toast.LENGTH_SHORT).show();
-                    if (!usuario.isAdmin()){
-                        mViewHolder.gerenciarTarefas.setClickable(false);
-                        mViewHolder.gerenciarTarefas.setVisibility(View.INVISIBLE);
-                    } else {
-                        mViewHolder.gerenciarTarefas.setClickable(true);
-                        mViewHolder.gerenciarTarefas.setVisibility(View.VISIBLE);
-                    }
+//                    if (!usuario.isAdmin()){
+//                        mViewHolder.gerenciarTarefas.setClickable(false);
+//                        mViewHolder.gerenciarTarefas.setVisibility(View.INVISIBLE);
+//                    } else {
+//                        mViewHolder.gerenciarTarefas.setClickable(true);
+//                        mViewHolder.gerenciarTarefas.setVisibility(View.VISIBLE);
+//                    }
                     obterTurma(usuario);
                 } else{
                     Toast.makeText(HomeClassActivity.this, "Não recebeu", Toast.LENGTH_SHORT).show();
@@ -281,10 +282,28 @@ public class HomeClassActivity extends AppCompatActivity
                         "ID TURMA RECEBIDA: "+id);
                         if (tarefa.getTurmaID().equals(id)){
                             tarefas.add(tarefa);
-
                         }
                     }
                 }
+
+                if (tarefas.isEmpty()){
+                    mViewHolder.gerenciarTarefas.setClickable(false);
+                    mViewHolder.gerenciarTarefas.setVisibility(View.INVISIBLE);
+                } else {
+                    mViewHolder.gerenciarTarefas.setClickable(true);
+                    mViewHolder.gerenciarTarefas.setVisibility(View.VISIBLE);
+                }
+
+//                OCUTAR HABILITADOR DE EDIÇÃO CASO NÃO TENHA TAREFAS OU NÃO FOR ADMIN
+//                if (tarefas.isEmpty()){
+//                    mViewHolder.gerenciarTarefas.setClickable(false);
+//                    mViewHolder.gerenciarTarefas.setVisibility(View.INVISIBLE);
+//                } else {
+//                    if (usuario.isAdmin()){
+//                        mViewHolder.gerenciarTarefas.setClickable(true);
+//                        mViewHolder.gerenciarTarefas.setVisibility(View.VISIBLE);
+//                    }
+//                }
 
                 mViewHolder.recyclerView.setAdapter(new TarefasAdapter(HomeClassActivity.this, tarefas, HomeClassActivity.this));
                 RecyclerView.LayoutManager layout = new LinearLayoutManager(HomeClassActivity.this,
@@ -348,8 +367,9 @@ public class HomeClassActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
-            // Handle the camera action
+        if (id == R.id.nav_politica_de_privacidade) {
+            Intent intent = new Intent(this, PoliticaPrivacidadeActivity.class);
+            startActivity(intent);
 
         } else if (id == R.id.nav_share) {
             Intent sendIntent = new Intent();
@@ -374,7 +394,6 @@ public class HomeClassActivity extends AppCompatActivity
     public void onClick(Object object) {
             Tarefa tarefa = (Tarefa) object;
         if (mViewHolder.gerenciarTarefas.isChecked()) {
-            Toast.makeText(this, "Clicou", Toast.LENGTH_SHORT).show();
             Intent intent = new Intent(this, EditTaskActivity.class);
             intent.putExtra("turmaID", turma.getId());
             intent.putExtra("tarefaID", tarefa.getId());

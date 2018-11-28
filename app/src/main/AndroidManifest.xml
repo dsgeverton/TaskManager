@@ -49,7 +49,8 @@
             </intent-filter>
         </service>
 
-        <activity android:name=".View.EditTaskActivity"></activity>
+        <activity android:name=".View.EditTaskActivity" />
+        <activity android:name=".View.PoliticaPrivacidadeActivity"></activity>
     </application>
 
 </manifest>

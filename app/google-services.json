@@ -15,7 +15,23 @@
       },
       "oauth_client": [
         {
-          "client_id": "635369457355-2ame2j3168dqkbhb8b3hek0d0qbjav98.apps.googleusercontent.com",
+          "client_id": "635369457355-5laa8at59t4b3er9hdbgca8ddnc5f4gr.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "br.com.everoot.tarefasescolar",
+            "certificate_hash": "c45213504b2f90430af72625f5c4074886dcfe15"
+          }
+        },
+        {
+          "client_id": "635369457355-0or5odlb2a6308qclscd58g4gpt0shoj.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "br.com.everoot.tarefasescolar",
+            "certificate_hash": "657af39ccd1346f3b0e493d15c10c2a500b06fac"
+          }
+        },
+        {
+          "client_id": "635369457355-teu3eiged3p7240aahh7qm0udm7qqgcs.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "br.com.everoot.tarefasescolar",
@@ -23,13 +39,16 @@
           }
         },
         {
-          "client_id": "635369457355-qqhmnmgjklvfjb9lmmla7mdc9063fv5f.apps.googleusercontent.com",
+          "client_id": "635369457355-endnplaimfi132hoh2d7igrdioj28c3v.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyCCMAcglAsUsg_nPvA4SWuig5_iEEWtM5c"
+          "current_key": "AIzaSyDp8iGffugpmdgXEtTPAZLuJHwowcBcg8M"
+        },
+        {
+          "current_key": "AIzaSyAULTVFhe3eMa0WeLWKTVFF7V5xHS4bHsY"
         }
       ],
       "services": {
@@ -40,7 +59,7 @@
           "status": 2,
           "other_platform_oauth_client": [
             {
-              "client_id": "635369457355-drfi36efiobi4rp5sjbs7d8o8v6lqg0l.apps.googleusercontent.com",
+              "client_id": "635369457355-endnplaimfi132hoh2d7igrdioj28c3v.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
